@@ -57,9 +57,17 @@ def main():
     #'Physical Activity Level', 'Stress Level', 'BMI Category', 'Heart Rate',
     #'Daily Steps', 'Sleep Disorder', 'bp_upper', 'bp_lower'
     
-    age = st.slider('Age', 0,100,1)
-    gender = st.selectbox('Gender', ['Male', 'Female'])
-    occupation = st.selectbox('Occupation',['Other', 'Doctor', 'Teacher', 'Nurse', 'Engineer', 'Accountant',
+    col1, col2 = st.columns((2))
+    
+    with col1:
+        st.subheader('General Information')
+        age = st.slider('Age', 0,100,1)
+        
+        col3, col4 = st.columns((2))
+        with col3:
+            gender = st.selectbox('Gender', ['Male', 'Female'])
+        with col4:
+            occupation = st.selectbox('Occupation',['Other', 'Doctor', 'Teacher', 'Nurse', 'Engineer', 'Accountant',
        'Lawyer', 'Salesperson'])
     bmi = st.selectbox('BMI Category',['Overweight', 'Normal', 'Obese'])
     
