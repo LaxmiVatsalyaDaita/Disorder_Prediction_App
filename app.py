@@ -17,12 +17,31 @@ def sleep_disorder_prediction(input_data):
 
     prediction = loaded_model.predict(input_data_reshaped)
     print(prediction)
-
+    percent = loaded_model.predict_proba(input_data_reshaped)
+    pred = loaded_model.predict_proba(input_data_reshaped)
+    risk = pred[:,1]
+    risk_percent = round(risk[0]*100, 2)
+    print(risk_percent)
+    
     if (prediction[0] == 0):
-        return 'the person is not at a risk of sleep disorder'
+        return 'the person is not at a risk of sleep disorder' 
     else:
         return 'the person is at a risk of sleep disorder'
     
+    
+def percentage_of_risk(input_data):
+    
+    input_data_as_np_array = np.asarray(input_data) 
+
+    input_data_reshaped = input_data_as_np_array.reshape(1,-1) 
+
+    pred = loaded_model.predict_proba(input_data_reshaped)
+    risk = pred[:,1]
+    risk_percent = round(risk[0]*100, 2)
+    
+    print(risk_percent)
+    
+    return str(risk_percent)
     
     
 # UI
@@ -43,15 +62,32 @@ def main():
     occupation = st.selectbox('Occupation',['Other', 'Doctor', 'Teacher', 'Nurse', 'Engineer', 'Accountant',
        'Lawyer', 'Salesperson'])
     bmi = st.selectbox('BMI Category',['Overweight', 'Normal', 'Obese'])
-    sleepDuration = st.text_input('Average Sleep Duration in hours')
-    qualityOfSleep = st.text_input('Quality of sleep on a scale of 1 to 10')
-    phyActivityLevel = st.text_input('Physical Activity on a scale of 0 to 100')
-    stressLevel = st.text_input('Stress Level on a scale of 1 to 10')
-    heartRate = st.text_input('Heart Rate')
-    dailySteps = st.text_input('Daily Steps')
-    bpUpper = st.text_input('Systolic (upper number)')
-    bpLower = st.text_input('Diastolic (lower number)')
     
+    sleepDuration = st.text_input('Average Sleep Duration in hours')
+    if sleepDuration.isalpha():
+        st.write('Please enter a number')
+        sleepDuration = 0
+    
+    qualityOfSleep = st.slider('Quality of Sleep', 0.0,10.0,step=0.5)
+    phyActivityLevel = st.slider('Level of Physical Activity', 0,100,1)
+    stressLevel = st.slider('Average Stress Level', 0,10,1)
+    
+    heartRate = st.text_input('Heart Rate')
+    if heartRate.isalpha():
+        st.write('Please enter a number')
+        heartRate = 0
+    dailySteps = st.text_input('Daily Steps')
+    if dailySteps.isalpha():
+        st.write('Please enter a number')
+        dailySteps = 0
+    bpUpper = st.text_input('Systolic (upper Blood Pressure)')
+    if bpUpper.isalpha():
+        st.write('Please enter a number')
+        bpUpper = 0
+    bpLower = st.text_input('Diastolic (lower Blood Pressure)')
+    if bpLower.isalpha():
+        st.write('Please enter a number')
+        bpLower = 0
     
     # encoding the categorical inputs
     if (gender=='Male'):
@@ -74,8 +110,7 @@ def main():
     elif (occupation=='Salesperson'):
         Occupation = 6
     elif (occupation=='Teacher'):
-        Occupation = 7
-        
+        Occupation = 7   
         
     if (bmi=='Overweight'):
         BMI = 2
@@ -88,12 +123,24 @@ def main():
         
     # code for prediction
     diagnosis = '' # creating an empty string to store the result
+    percent_of_risk = ''
     
     # creating button for predicting
-    if st.button('Risk Prediction'):
-        diagnosis = sleep_disorder_prediction([Gender, age, Occupation, sleepDuration, qualityOfSleep, phyActivityLevel, stressLevel, BMI, heartRate, dailySteps, bpUpper, bpLower])
+    col1, col2 = st.columns((2))
+    
+    with col1:
+        if st.button('Risk Prediction'):
+            diagnosis = sleep_disorder_prediction([Gender, age, Occupation, sleepDuration, qualityOfSleep, phyActivityLevel, stressLevel, BMI, heartRate, dailySteps, bpUpper, bpLower])
         
-    st.success(diagnosis)
+        st.write(diagnosis)
+        
+    with col2:
+        if st.button('Risk Estimation'):
+            percent_of_risk = percentage_of_risk([Gender, age, Occupation, sleepDuration, qualityOfSleep, phyActivityLevel, stressLevel, BMI, heartRate, dailySteps, bpUpper, bpLower])
+            
+        st.write(percent_of_risk)  
+            
+    
     
 
 
