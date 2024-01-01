@@ -56,6 +56,8 @@ def main():
     st.markdown('<style>div.block-container{padding-top:1rem;}<style>', unsafe_allow_html=True)
     # creating input data fields to get data from user
     
+    st.write('Please enter your data in all the fields before requesting the predictive results. The page has been set to take the input as 0 by default if no data is provided.')
+    
     #'Gender', 'Age', 'Occupation', 'Sleep Duration', 'Quality of Sleep',
     #'Physical Activity Level', 'Stress Level', 'BMI Category', 'Heart Rate',
     #'Daily Steps', 'Sleep Disorder', 'bp_upper', 'bp_lower'
@@ -135,6 +137,12 @@ def main():
     elif (bmi=='Obese'):
         BMI = 1
         
+    sleepDuration = float(sleepDuration) if sleepDuration.replace('.', '').isdigit() else 0
+    heartRate = float(heartRate) if heartRate.replace('.', '').isdigit() else 0
+    dailySteps = float(dailySteps) if dailySteps.replace('.', '').isdigit() else 0
+    bpUpper = float(bpUpper) if bpUpper.replace('.', '').isdigit() else 0
+    bpLower = float(bpLower) if bpLower.replace('.', '').isdigit() else 0
+    
     input_features = [Gender, age, Occupation, sleepDuration, qualityOfSleep, phyActivityLevel, stressLevel, BMI, heartRate, dailySteps, bpUpper, bpLower]
         
     # code for prediction
@@ -144,33 +152,35 @@ def main():
     # creating button for predicting
     col1, col2 = st.columns((2))
     
-    with col1:
-        if st.button('Risk Prediction'):
-            diagnosis = sleep_disorder_prediction(input_features)
-        
-        st.write(diagnosis)
-        
-        if st.button('Risk Estimation'):
-            percent_of_risk = percentage_of_risk(input_features)
-            
-        st.write(percent_of_risk)
-        
-        st.write(':triangular_flag_on_post: Nearly everyone has an occasional sleepless night. However, if you often have trouble sleeping, contact your health care provider.')
-        
     with col2:
+        nc1, nc2, nc3 = st.columns((3))
+        
+        with nc1:
+            if st.button('Risk Prediction'):
+                diagnosis = sleep_disorder_prediction(input_features)
+            st.write(diagnosis)
+            
+            
+        
+        with nc2:
+            if st.button('Risk Estimation'):
+                percent_of_risk = percentage_of_risk(input_features)
+            st.write(percent_of_risk)
+        
+        with nc3:
+            if st.button('Reset'):
+                st.rerun()
+        st.write(':triangular_flag_on_post: Nearly everyone has an occasional sleepless night. However, if you often have trouble sleeping, contact your health care provider.')    
+                
+    with col1:
         with st.expander("Tips for Better Sleep Health"):
             st.markdown('* Stick to a sleep schedule' )
             st.markdown('* Pay attention to what you eat and drink')
             st.markdown('* Create a restful environment')
             st.markdown('* Limit daytime naps')
             st.markdown('* Include physical activity in your daily routine')
-            st.markdown('* Manage worries')
-        
-    
-    
-          
-            
-    
+            st.markdown('* Manage worries')        
+
 
 if __name__ == '__main__':
     main() # doing this makes the code work as a stand-alone file. importing this file would not work. 
