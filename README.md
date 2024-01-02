@@ -2,7 +2,7 @@
 
 The web application has been deployed [here](https://sleepdisorderpredictionapp-c9bz3wggwq9jkata4qfvez.streamlit.app/) using *streamlit.io*
 
-### To run the code on local machine:
+## To run the code on local machine:
 1. Clone the Git Repository.
 2. Install the required libraries by running `pip install -r requirements.txt` in terminal.
 3. Use `streamlit run app.py` to run the app on localhost.
